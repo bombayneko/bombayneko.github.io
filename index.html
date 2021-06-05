@@ -52,6 +52,15 @@
 		function buyModal() {
 			main();
 		}
+
+		function copy2clip() {
+			var text = "0x2c6D8AF38c7736A8E1840EC07c9c2e545B49abD5";
+			navigator.clipboard.writeText(text).then(function() {
+				alert('PBNEKO Address copied to clipboard!');
+			}, function(err) {
+				alert('Could not copy PBNEKO Address!');
+			});
+		}
 		
 		async function buy(){
 
@@ -169,6 +178,7 @@
 									<p>Buy it right now, before it's too late! Great prices at preorder!</p>
 									<ul class="actions">
 										<li><button onclick="buyModal()" class="button" data-toggle="modal" data-target="#exampleModal">Preorder now</button></li>
+										<li><button onclick="copy2clip()" class="button">Copy address to clipboard</button></li>
 									</ul>
 								</div>
 							</div>
@@ -233,17 +243,18 @@
 				</div>
 				<div class="modal-body" style="margin: 5% auto; text-align: center;">
 					<div>
-						<p>Bombay Neko presale contract, with BNB to NEKO exchange at a 1:66K rate</p>
+						<p>Bombay Neko presale contract, with BNB to PBNEKO exchange at a 1:66K rate.</p>
 					</div>
 					<div>
 						<span style="margin-left:10px;">BNB</span><input type="number" oninput="updateInput(this.value)" class="buy-input" id="bnb-buy-value">
-						<span style="margin-left:10px;">NEKO</span><input type="number" oninput="updateNekoInput(this.value)" class="buy-input" id="neko-value">
+						<span style="margin-left:10px;">PBNEKO</span><input type="number" oninput="updateNekoInput(this.value)" class="buy-input" id="neko-value">
 					</div>
 					<div>
 						<span>0%</span>
 						<input class="range-input" oninput="updateRange(this.value)" type="range"  min="0" max="100" step="5" value="0">
 						<span>100%</span>
 					</div>
+					<p>All Presale Bombay Neko (PBNEKO) Tokens will be used to airdrop BNEKO as soon as the presale ends.</p>
 				</div>
 				<div class="modal-footer">
 				<button type="button" class="button primary buy-button align-self-start" onclick="buy()">Buy</button>
