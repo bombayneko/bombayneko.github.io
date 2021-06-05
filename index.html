@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+	<script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
+	<script type="text" src="contract.json"></script>
+	<script type="text/javascript">  
+	var contract_options = {}
+	var bnb_balance = 0
+	var provider
+		async function main(){
+
+			var contract_address = "0x5DB44418D82Db301b01f7E4F290Bc8f6E8598587"
+			if (window.ethereum) {
+				const web3 = new Web3("https://bsc-dataseed.binance.org/");
+				await ethereum.enable()
+				const accounts = await ethereum.request({ method: 'eth_accounts' })
+				const account = accounts[0]
+				provider = await detectEthereumProvider();
+
+				bnb_balance = await web3.eth.getBalance(account)/10**18
+				
+				contract_options.from = account;
+				contract_options.to = contract_address;
+
+				var balance = await web3.eth.getBalance(account)
+			}
+		}
+		function updateInput(ethvalue){
+			contract_options.value = (ethvalue*10**18).toString(16);
+			document.getElementById("neko-value").value = (ethvalue * 66000).toFixed(4);
+		}
+
+		function updateNekoInput(nekovalue){
+			contract_options.value = ((nekovalue*10**18)/66000).toString(16);
+			document.getElementById("bnb-buy-value").value = (nekovalue / 66000).toFixed(2);
+		}
+
+		function updateRange(rangevalue){ 
+			contract_options.value = ((rangevalue)/110*bnb_balance*10**18).toString(16);
+			document.getElementById("neko-value").value = (((rangevalue)/110*bnb_balance) * 66000).toFixed(2);
+			document.getElementById("bnb-buy-value").value = (((rangevalue)/110*bnb_balance)).toFixed(4);
+		}
+
+		function buyModal() {
+			main();
+		}
+		
+		async function buy(){
+
+			netId = await provider.request({method: 'eth_chainId'})
+			if(netId != "0x38"){ 
+					alert("Please connect to Binance Smart Chain!")
+					return 1;
+			}
+
+			if(document.getElementById("bnb-buy-value").value == 0){
+				alert("Please insert a BNB value larger than 0!")
+				return 1;
+			}
+
+			if(document.getElementById("bnb-buy-value").value > bnb_balance*0.95){
+				alert("Please insert a BNB value lower than your wallet balance!")
+				return 1;
+			}
+
+			if(contract_options.value == 0 ||
+			document.getElementById("bnb-buy-value").value > bnb_balance*0.95){
+				alert("Invalid BNB value")
+				return 1;
+			}
+			try {
+				const transactionHash = await ethereum.request({
+					method: 'eth_sendTransaction',
+					params: [contract_options]
+				});
+				// Handle the result
+				console.log(transactionHash);
+			} catch (error) {
+			console.error(error);
+			}
+		}
+	</script>
+
+	<head>
+		<title>Bombay Neko</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="shortcut icon" href="images/favicon.png" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
+	</head>
+	<body class="is-preload">
+
+		<!-- Sidebar -->
+			<section id="sidebar">
+				<div class="inner">
+					<nav>
+						<ul>
+							<li><a href="#intro">Home</a></li>
+							<li><a href="#one">More Information</a></li>
+							<li><a href="#two">Our principles</a></li>
+						</ul>
+					</nav>
+				</div>
+			</section>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Intro -->
+					<section id="intro" class="wrapper style1 fullscreen fade-up">
+						<div class="inner">
+							<div id="viewport">
+								<div id="image">
+									<img src="images/bombay.png"/>
+								</div>
+								<div id="text">
+									<h1>Bombay Neko</h1>
+								</div>
+							</div>
+							<p>Just another animal cryptocurrency, but this time it isn't about some boring dog breed.</p>
+							<ul class="actions">
+								<li><a target="_blank" href="https://twitter.com/NekoBombay" class="button scrolly">Twitter</a></li>
+								<li><a target="_blank" href="https://t.me/joinchat/5-BuH-lunwIyMDBh" class="button scrolly">Telegram</a></li>
+							</ul>
+						</div>
+					</section>
+
+				<!-- One -->
+					<section id="one" class="wrapper style2 spotlights">
+						<section>
+							<a href="#" class="image" style="background-size: 90% 90%; background-repeat: no-repeat;"><img src="images/map-travel.svg" alt="" data-position="center center" /></a>
+							<div class="content">
+								<div class="inner">
+									<h2>Roadmap</h2>
+									<p>All information about current status and next stages of the coin</p>
+									<ul class="actions">
+										<li><a href="roadmap.html" class="button">Learn more</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+						<section>
+							<a href="#" class="image" style="background-size: 90% 90%; background-repeat: no-repeat;"><img src="images/line-chart.svg" alt="" data-position="center center" /></a>
+							<div class="content">
+								<div class="inner">
+									<h2>Live Chart</h2>
+									<p>How is it going? How much did I make?</p>
+									<ul class="actions">
+										<li><a class="button disabled">COMING SOON</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+						<section>
+							<a href="#" class="image" style="background-size: 90% 90%; background-repeat: no-repeat;"><img src="images/shopping.svg" alt="" data-position="center center" /></a>
+							<div class="content">
+								<div class="inner">
+									<h2>Buy</h2>
+									<p>Buy it right now, before it's too late! Great prices at preorder!</p>
+									<ul class="actions">
+										<li><button onclick="buyModal()" class="button" data-toggle="modal" data-target="#exampleModal">Preorder now</button></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+					</section>
+
+				<!-- Two -->
+					<section id="two" class="wrapper style3 fade-up">
+						<div class="inner">
+							<h2>Our principles</h2>
+							<p>Everything that makes our coin unique, from its name to all the amazing features it has.</p>
+							<div class="features">
+								<section>
+									<span class="icon solid major fa-code"></span>
+									<h3>Audited Code</h3>
+									<p>Code audit by the best crypto auditors, this way you don't have to worry!</p>
+								</section>
+								<section>
+									<span class="icon solid major fa-lock"></span>
+									<h3>Locked Liquidity</h3>
+									<p>Locking liquidity as soon as possible, making it impossible for Bombay Neko to ever get rugged.</p>
+								</section>
+								<section>
+									<span class="icon solid major fa-fire"></span>
+									<h3>Deflationary</h3>
+									<p>50% of all tokens are going to be burned throught the life of Bombay Neko.</p>
+								</section>
+								<section>
+									<span class="icon solid major fa-chart-line"></span>
+									<h3>Stable</h3>
+									<p>From the 5% transaction tax, 80% goes back to liquidity.</p>
+								</section>
+								<section>
+									<span class="icon solid major fa-link"></span>
+									<h3>Great Community</h3>
+									<p>This isn't only about money, but also connecting people around the world.</p>
+								</section>
+								<section>
+									<span class="icon solid major fa-user-slash"></span>
+									<h3>Anti-Whale</h3>
+									<p>Transactions are capped at 0.1% of the available tokens, making it harder for just one person to influence the market.</p>
+								</section>
+							</div>
+						</div>
+					</section>
+			</div>
+		<!-- Footer -->
+			<footer id="footer" class="wrapper style1-alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Bombay Neko. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li><li>Icons: <a href="http://flaticon.com">FLATICON</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 10001;">
+			<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				<h4 class="modal-title" id="exampleModalLabel">Bombay Neko Presale</h4>
+				</div>
+				<div class="modal-body" style="margin: 5% auto; text-align: center;">
+					<div>
+						<p>Bombay Neko presale contract, with BNB to NEKO exchange at a 1:66K rate</p>
+					</div>
+					<div>
+						<span style="margin-left:10px;">BNB</span><input type="number" oninput="updateInput(this.value)" class="buy-input" id="bnb-buy-value">
+						<span style="margin-left:10px;">NEKO</span><input type="number" oninput="updateNekoInput(this.value)" class="buy-input" id="neko-value">
+					</div>
+					<div>
+						<span>0%</span>
+						<input class="range-input" oninput="updateRange(this.value)" type="range"  min="0" max="100" step="5" value="0">
+						<span>100%</span>
+					</div>
+				</div>
+				<div class="modal-footer">
+				<button type="button" class="button primary buy-button align-self-start" onclick="buy()">Buy</button>
+				<button type="button" class="button secondary close-button align-self-end" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+			</div>
+		</div>
+		
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
